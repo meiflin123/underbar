@@ -200,13 +200,30 @@ return current
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+  // TIP: Try re-using reduce() here.
+  
+    if(iterator === undefined){
+      return collection.includes(false)=== true?  false: true}
+      
+    var qualified = _.reduce(collection, function(current, x){
+      
+      current.push(!(!iterator(x)=== true))
+      
+      return current}, [])
+      
+      
+ return qualified.includes(false) === true? false: true
+    
   };
 
-  // Determine whether any of the elements pass a truth test. If no iterator is
+// Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if(!iterator){return collection.includes(true)}
+    var arr = _.filter(collection, iterator)
+    return arr.length > 0 ? true: false
+    
   };
 
 
@@ -228,13 +245,29 @@ return current
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
-  };
-
-  // Like extend, but doesn't ever overwrite a key that already
+  _.extend = function(obj)  {
+   var accumulatedObj = arguments[0]
+   for(var i = 1; i< arguments.length; i++){
+     var currentObj = arguments[i]
+     for(var key in currentObj){
+       
+         accumulatedObj[key] = currentObj[key]
+       
+     }}
+  return accumulatedObj
+  };  // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-  };
+	  var accumulatedObj = arguments[0]
+   for(var i = 1; i< arguments.length; i++){
+     var currentObj = arguments[i]
+     for(var key in currentObj){
+       if(!accumulatedObj.hasOwnProperty(key)){
+         accumulatedObj[key] = currentObj[key]}
+       
+     }}
+  return accumulatedObj
+    };
 
 
   /**
@@ -277,6 +310,22 @@ return current
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+  var cache = {}
+  //var slice = Array.prototype.slice <- this only run the memoized function once when given an array like [1,2,3] and then a list of arguments like (1,2,3).
+
+  return function() {
+	//var arg = slice.call(arguments)
+    var args = JSON.stringify(arguments);
+
+    if (args in cache){
+      return cache[args];}
+    else {
+      cache[args] = func.apply(this, arguments);
+      return cache[args]
+      }
+
+  
+}
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -286,8 +335,8 @@ return current
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-  };
-
+	  var args = Array.prototype.slice.call(arguments, 2)
+     setTimeout(function(){func.apply(this, args)}, wait)}
 
   /**
    * ADVANCED COLLECTION OPERATIONS
@@ -300,7 +349,20 @@ return current
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-  };
+	  var arr = array.slice();
+	  var temp;
+	  var i 
+	  var m = arr.length;
+	  
+	  while(m){
+		  i = Math.floor(Math.random() * m)
+		  m--
+		  temp = arr[m]
+		  arr[m] = arr[i]
+		  arr[i] = temp;
+	  }
+	  return arr
+	 	    };
 
 
   /**
