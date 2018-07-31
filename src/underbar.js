@@ -393,7 +393,7 @@
 
       return method.apply(item, args);
     });
-      };
+      
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -480,6 +480,7 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+
     var flag = false;
 
     return function() {
@@ -492,4 +493,5 @@
         }, wait);
       }
     };
-  }());
+      };
+}());
