@@ -465,6 +465,13 @@
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var others = _.flatten(Array.prototype.slice.call(arguments, 1));
+
+    // Extract only the items that aren't contained within the flattened
+    // `others` array
+    return _.filter(array, function(item) {
+      return !_.contains(others, item);
+    });
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -473,5 +480,16 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
-  };
-}());
+    var flag = false;
+
+    return function() {
+      if (flag !== true) {
+        flag = true;
+        func.apply(Array.prototype.slice.apply(arguments));
+
+        setTimeout(function() {
+          flag = false;
+        }, wait);
+      }
+    };
+  }());
