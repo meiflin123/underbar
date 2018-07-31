@@ -451,6 +451,15 @@
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var others = Array.prototype.slice.call(arguments, 1);
+
+    // Now, let's get a copy of arguments[0] that doesn't contain duplicates and
+    // see if each value appears as an indexOf every single other array.
+    return _.filter(_.uniq(arguments[0]), function(item) {
+      return _.every(others, function(array) {
+        return _.indexOf(array, item) > -1;
+      });
+    });
   };
 
   // Take the difference between one array and a number of other arrays.
